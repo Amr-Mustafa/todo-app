@@ -1,0 +1,17 @@
+<html>
+	<head>
+		<title>Register</title>
+	</head>
+	<body>
+		<h1>Register</h1>
+		<form action="/register" method="post">
+			{{ form.email }}
+		  	{{ form.password }}
+		  	{{ form.csrf_token }}
+		  	{% for error in form.errors %}
+		  		<li style="color:red">{{ error }}</li>
+		  	{% endfor %}
+		  	<input type="submit" value="submit">
+		</form>
+	</body>
+</html>
