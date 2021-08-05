@@ -51,6 +51,16 @@ const actions = {
     return await dispatch("GetItems");
   },
 
+  async UpdateItem({ dispatch }, item) {
+    let config = {
+      headers: {
+        "Authorization": "Bearer " + state.user.jwt_token,
+      }
+    }
+    await axios.put("item", { _id: item._id, description: item.description }, config);
+    return await dispatch("GetItems");
+  },
+
   async GetItems({ commit }) {
     let config = {
       headers: {

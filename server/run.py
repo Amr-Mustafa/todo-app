@@ -66,14 +66,15 @@ class Item(Resource):
     @jwt_required()
     def put(self):
         parser = reqparse.RequestParser()
-        parser.add_argument('_id', type=int, required=True)
+        parser.add_argument('_id', type=str, required=True)
         parser.add_argument('description', type=str, required=True)
 
         logged_in_email = get_jwt_identity()
-        data = Item.parser.parse_args()
+        data = parser.parse_args()
 
-        database.items.find_one_and_update({'_id': data['id'], 'email': logged_in_email}, 
+        database.items.find_one_and_update({'_id': ObjectId(data['_id']), 'email': logged_in_email}, 
             {'$set': {'description': data['description']}})
+        return HTTPStatus.OK.value
 
 
 class Items(Resource):

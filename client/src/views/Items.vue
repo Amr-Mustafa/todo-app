@@ -1,33 +1,35 @@
 <template>
   <b-container>
     <b-row>
-      <b-col sm="9" align-self="center">
-        <div v-if="User">
-          <p>Hi {{User}}</p>
-        </div>
-        <div>
-            <form @submit.prevent="submit">
-              <div>
-                <textarea name="description" v-model="form.description" placeholder="Description..."></textarea>
+      <table class="table table-hover">
+        <thead>
+          <tr>
+            <th scope="col">Item</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>
+              <input name="description" v-model="form.description" placeholder="Description..."></input>
+            </td>
+            <td>
+              <b-button variant="success" @click="submit">Submit</b-button>
+            </td>
+          </tr>
+          <tr v-for="(item, index) in Items" :key="index">
+            <td>
+              <input style="border: 0" v-model="item.description"></input>
+            </td>
+            <td>
+              <div class="btn-group" role="group">
+                <button type="button" class="btn btn-warning btn-sm" @click="UpdateItem({_id: item._id, description: item.description})">Update</button>
+                <button type="button" class="btn btn-danger btn-sm" @click="DeleteItem(item._id)">Delete</button>
               </div>
-              <button type="submit"> Submit</button>
-            </form>
-        </div>
-
-        <div v-if="Items">
-          <ul>
-            <li v-for="item in Items">
-              <div>
-                <p>{{item.description}} <hr> <a href="">Done</a> | <span>Edit</span> | <span @click="DeleteItem(item._id)">Remove</span></p>
-              </div>
-            </li>
-          </ul>
-        </div>
-        <div v-else>
-          No items to show...
-        </div>
-
-      </b-col>
+            </td>
+          </tr>
+        </tbody>
+      </table>
     </b-row>
   </b-container>
 </template>
@@ -55,7 +57,7 @@ export default {
     ...mapGetters({Items: "StateItems", User: "StateUser"}),
   },
   methods: {
-    ...mapActions(["CreateItem", "GetItems", "DeleteItem"]),
+    ...mapActions(["CreateItem", "GetItems", "DeleteItem", "UpdateItem"]),
     ...mapMutations(["editItem"]),
     async submit() {
       try {
@@ -63,6 +65,7 @@ export default {
       } catch (error) {
         throw "Sorry you can't make an item now!"
       }
+      this.form.description = ''
     },
   },
 };
