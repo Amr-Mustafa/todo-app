@@ -28,7 +28,7 @@ CORS(app, resources={r"/*": {"origins": "*"}})
 bcrypt = Bcrypt(app)
 
 # Establish connection with the MongoDB database server
-client = pymongo.MongoClient('localhost', MONGO_PORT)
+client = pymongo.MongoClient('mongodb://admin:password@mongodb')
 database = client.todo_app_store
 
 # Application Security
@@ -93,7 +93,7 @@ class Items(Resource):
             })
 
         return jsonify(items)
-        #return JSONEncoder().encode([item for item in items])
+
 
 class Register(Resource):
 
@@ -126,10 +126,16 @@ class Login(Resource):
 
         return {'msg': 'fail'}, HTTPStatus.BAD_REQUEST.value 
 
+class Ping(Resource):
+
+    def get(self):
+        return {'msg': 'pong!'}, HTTPStatus.OK.value
+
+api.add_resource(Ping, '/ping')
 api.add_resource(Items, '/items')
 api.add_resource(Item, '/item')
 api.add_resource(Register, '/register')
 api.add_resource(Login, '/login')
 
 if __name__=='__main__':
-	app.run(port=8000, debug=True)
+	app.run(port=8000, debug=True, host='0.0.0.0')

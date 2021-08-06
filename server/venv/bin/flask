@@ -1,4 +1,4 @@
-#!/home/amrmustafa/vault/dev/todo-app/src/flask/bin/python
+#!/home/amrmustafa/vault/dev/todo-app/server/venv/bin/python
 # -*- coding: utf-8 -*-
 import re
 import sys

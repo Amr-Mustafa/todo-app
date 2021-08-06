@@ -1,0 +1,18 @@
+version: '3'
+services:
+  mongodb:
+    image: mongo
+    ports:
+    - 27017:27017
+    environment:
+    - MONGO_INITDB_ROOT_USERNAME=admin
+    - MONGO_INITDB_ROOT_PASSWORD=password
+  server:
+    image: server
+    ports:
+    - 8000:8000
+  client:
+    image: client
+    ports:
+    - 8080:8080
+      

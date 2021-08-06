@@ -1,7 +1,19 @@
 <template>
-  <div id="app">
-    <router-view/>
-  </div>
+    <div id="app">
+        <h1>
+            Vuejs Todo app
+        </h1>
+
+        <div>
+            <router-link to="/login">Login</router-link>
+            <router-link to="/register">Register</router-link>
+        </div>
+
+        <div>
+            <router-view />
+        </div>
+        
+    </div>
 </template>
 
 <style>
