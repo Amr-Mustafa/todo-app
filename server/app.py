@@ -1,5 +1,9 @@
-from flask import Flask, request, jsonify
-from flask_restful import Resource, Api, reqparse
+from flask import Flask
+from flask import jsonify
+
+from flask_restful import Resource
+from flask_restful import Api
+from flask_restful import reqparse
 
 from flask_jwt_extended import JWTManager
 from flask_jwt_extended import jwt_required
@@ -7,16 +11,15 @@ from flask_jwt_extended import create_access_token
 from flask_jwt_extended import get_jwt_identity
 
 from flask_bcrypt import Bcrypt
-from flask_cors import CORS, cross_origin
-from http import HTTPStatus
+from flask_cors import CORS
 
-import smtplib
 import pymongo
-
-from bson.json_util import dumps
+from http import HTTPStatus
 from bson.objectid import ObjectId
 
 from config import MONGO_PORT
+from config import BCRYPT_LOG_ROUNDS
+from config import SECRET_KEY
 
 app = Flask(__name__)
 api = Api(app)
@@ -28,11 +31,12 @@ CORS(app, resources={r"/*": {"origins": "*"}})
 bcrypt = Bcrypt(app)
 
 # Establish connection with the MongoDB database server
+# client = pymongo.MongoClient('localhost', MONGO_PORT)
 client = pymongo.MongoClient('mongodb://admin:password@mongodb')
 database = client.todo_app_store
 
 # Application Security
-app.config["JWT_SECRET_KEY"] = "super-secret"
+app.config["JWT_SECRET_KEY"] = SECRET_KEY
 jwt = JWTManager(app)
 
 
@@ -72,8 +76,17 @@ class Item(Resource):
         logged_in_email = get_jwt_identity()
         data = parser.parse_args()
 
-        database.items.find_one_and_update({'_id': ObjectId(data['_id']), 'email': logged_in_email}, 
-            {'$set': {'description': data['description']}})
+        database.items.find_one_and_update(
+            {
+            '_id': ObjectId(data['_id']),
+            'email': logged_in_email
+            },  
+            {
+                '$set': {
+                    'description': data['description']
+                }
+            }
+        )
         return HTTPStatus.OK.value
 
 
@@ -105,10 +118,14 @@ class Register(Resource):
         data = parser.parse_args()
 
         if not database.users.find_one({'email': data['email']}):
-            database.users.insert_one({'email': data['email'], 'password': data['password']})
+            database.users.insert_one({
+                    'email': data['email'],
+                    'password': bcrypt.generate_password_hash(data['password'], BCRYPT_LOG_ROUNDS).decode('utf-8')
+                })
             return {'msg': 'success'}, HTTPStatus.CREATED.value
 
         return {'msg': 'fail'}, HTTPStatus.BAD_REQUEST.value 
+
 
 class Login(Resource):
 
@@ -120,11 +137,12 @@ class Login(Resource):
         data = parser.parse_args()
         user = database.users.find_one({'email': data['email']})
 
-        if user and user['password'] == data['password']:
+        if user and bcrypt.check_password_hash(user['password'], data['password']):
             access_token = create_access_token(identity=data['email'])
             return access_token, HTTPStatus.OK.value
 
         return {'msg': 'fail'}, HTTPStatus.BAD_REQUEST.value 
+
 
 class Ping(Resource):
 
@@ -136,6 +154,7 @@ api.add_resource(Items, '/items')
 api.add_resource(Item, '/item')
 api.add_resource(Register, '/register')
 api.add_resource(Login, '/login')
+
 
 if __name__=='__main__':
 	app.run(port=8000, debug=True, host='0.0.0.0')
