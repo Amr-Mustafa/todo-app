@@ -4,14 +4,14 @@
       <table class="table table-hover">
         <thead>
           <tr>
-            <th scope="col">Item</th>
+            <th scope="col">Items</th>
             <th></th>
           </tr>
         </thead>
         <tbody>
           <tr>
             <td>
-              <input name="description" v-model="form.description" placeholder="Description..."></input>
+              <input name="description" v-model="form.description" placeholder="Description...">
             </td>
             <td>
               <b-button variant="success" @click="submit">Submit</b-button>
@@ -19,7 +19,7 @@
           </tr>
           <tr v-for="(item, index) in Items" :key="index">
             <td>
-              <input style="border: 0" v-model="item.description"></input>
+              <input style="border: 0" v-model="item.description">
             </td>
             <td>
               <div class="btn-group" role="group">
@@ -61,7 +61,9 @@ export default {
     ...mapMutations(["editItem"]),
     async submit() {
       try {
-        await this.CreateItem(this.form);
+        if (this.form.description !== '') {
+          await this.CreateItem(this.form);
+        }
       } catch (error) {
         throw "Sorry you can't make an item now!"
       }

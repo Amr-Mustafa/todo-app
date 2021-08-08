@@ -31,6 +31,7 @@
           </b-form-group>
 
           <b-button variant="success" type="submit">Login</b-button>
+          <p v-if="showError">Incorrect user credentials!</p>
         </b-form>
       </b-col>
     </b-row>
