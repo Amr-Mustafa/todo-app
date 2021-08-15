@@ -1,3 +1,5 @@
+import os
+
 from flask import Flask
 from flask import jsonify
 
@@ -32,7 +34,16 @@ bcrypt = Bcrypt(app)
 
 # Establish connection with the MongoDB database server
 # client = pymongo.MongoClient('localhost', MONGO_PORT)
-client = pymongo.MongoClient('mongodb://admin:password@mongodb')
+username = os.environ['ME_CONFIG_MONGODB_ADMINUSERNAME']
+password = os.environ['ME_CONFIG_MONGODB_ADMINPASSWORD']
+url = os.environ['ME_CONFIG_MONGODB_SERVER']
+client = pymongo.MongoClient(f'mongodb://{username}:{password}@{url}')
+
+try:
+    client.admin.command('ping')
+except Exception:
+    print("Server not available")
+
 database = client.todo_app_store
 
 # Application Security

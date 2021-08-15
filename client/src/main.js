@@ -9,7 +9,7 @@ import 'bootstrap/dist/css/bootstrap.css';
 Vue.use(BootstrapVue);
 Vue.config.productionTip = false;
 
-axios.defaults.baseURL = 'http://localhost:8000/';
+axios.defaults.baseURL = 'http://10.109.130.42:8000/';
 
 new Vue({
   router,
