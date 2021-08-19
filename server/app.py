@@ -160,11 +160,11 @@ class Ping(Resource):
     def get(self):
         return {'msg': 'pong!'}, HTTPStatus.OK.value
 
-api.add_resource(Ping, '/ping')
-api.add_resource(Items, '/items')
-api.add_resource(Item, '/item')
-api.add_resource(Register, '/register')
-api.add_resource(Login, '/login')
+api.add_resource(Ping, '/api/ping')
+api.add_resource(Items, '/api/items')
+api.add_resource(Item, '/api/item')
+api.add_resource(Register, '/api/register')
+api.add_resource(Login, '/api/login')
 
 
 if __name__=='__main__':

@@ -9,7 +9,7 @@ import 'bootstrap/dist/css/bootstrap.css';
 Vue.use(BootstrapVue);
 Vue.config.productionTip = false;
 
-axios.defaults.baseURL = 'http://10.105.176.203:8000';
+axios.defaults.baseURL = 'http://doit.com/api/';
 
 new Vue({
   router,
