@@ -19,6 +19,12 @@ spec:
         image: amrmustafa/client
         ports:
         - containerPort: 8080
+        env:
+        - name: BACKEND_URL
+          valueFrom: 
+            configMapKeyRef:
+              name: mongodb-configmap
+              key: backed_url
 ---
 apiVersion: v1
 kind: Service
