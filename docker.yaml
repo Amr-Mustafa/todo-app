@@ -10,11 +10,11 @@ services:
     volumes:
       - mongo-data:/data/db
   server:
-    image: server
+    image: amrmustafa/server
     ports:
       - 8000:8000
   client:
-    image: client
+    image: amrmustafa/client
     ports:
       - 8080:8080
 volumes:

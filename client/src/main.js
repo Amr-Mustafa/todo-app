@@ -1,4 +1,4 @@
-import BootstrapVue from 'bootstrap-vue';
+import { BootstrapVue, BootstrapVueIcons } from 'bootstrap-vue';
 import Vue from 'vue';
 import store from './store'
 import App from './App.vue';
@@ -7,9 +7,10 @@ import axios from 'axios';
 import 'bootstrap/dist/css/bootstrap.css';
 
 Vue.use(BootstrapVue);
+Vue.use(BootstrapVueIcons)
 Vue.config.productionTip = false;
 
-axios.defaults.baseURL = 'http://doit.com/api/';
+axios.defaults.baseURL = 'http://localhost:8000/api/'//'http://doit.com/api/';
 
 new Vue({
   router,

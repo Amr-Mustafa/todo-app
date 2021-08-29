@@ -30,17 +30,31 @@
             ></b-form-input>
           </b-form-group>
 
-          <b-button variant="success" type="submit">Login</b-button>
+          <b-button variant="success" type="submit">Login!!</b-button>
           <p v-if="showError">Incorrect user credentials!</p>
         </b-form>
+        <b-button @click="githubLogin">
+          <b-icon icon="github"></b-icon>
+          Login With Github
+        </b-button>
       </b-col>
     </b-row>
   </b-container> 
 </template>
 
 <script>
-import { mapActions } from "vuex";
+
+import { mapActions, mapMutations } from "vuex";
+import axios from "axios";
+import Vue from 'vue'
+
+
+var source = new EventSource("http://localhost:8000/stream");
+
 export default {
+  mounted() {
+    source.addEventListener('auth', this.auth);
+  },
   name: "Login",
   components: {},
   data() {
@@ -53,6 +67,7 @@ export default {
   },
   methods: {
     ...mapActions(["LogIn"]),
+    ...mapMutations(["setUser"]),
     async submit() {
       const User = new FormData();
       User.append("email", this.form.email);
@@ -65,6 +80,22 @@ export default {
         this.showError = true
       }
     },
+    async githubLogin() {
+      fetch(`https://github.com/login/oauth/authorize?
+        response_type=token
+        &client_id=cb72d955c84365f9f932
+        &redirect_uri=http://localhost:8000/api/login/github
+        &state=NkYYkZL1uafLZToPgkINnDU3U9euVz`)
+      .then(response => window.open(response.url));
+    },
+    auth(event) {
+      var data = JSON.parse(event.data);
+      console.log(data);
+      Vue.set(this.$store.state, 'user', {
+        "email": data.email,
+        "jwt_token": data.jwt
+      });
+    }
   },
 };
 </script>
